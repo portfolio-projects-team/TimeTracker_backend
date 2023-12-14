@@ -6,10 +6,10 @@ const app = express();
 const router = express.Router();
 app.use(router);
 
-app.get(
-    '/hello',
+app.post(
+    '/task',
     expressAsyncHandler(async (req, res) => {
-        res.json({ message: 'hello word' });
+        res.json({ message: 'hello world' });
     }),
 );
 
