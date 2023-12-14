@@ -18,4 +18,4 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
       # sam build 
       - run: sam build --use-container
-      - run: sam deploy --no-confirm-changeset --no-fail-on-empty-changeset --stack-name test-app --s3-bucket test-app
+      - run: sam deploy --no-confirm-changeset --no-fail-on-empty-changeset --stack-name test-app
