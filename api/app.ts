@@ -1,11 +1,11 @@
 import express from 'express';
 import serverlessExpress from '@vendia/serverless-express';
 import expressAsyncHandler from 'express-async-handler';
-import { DynamoDBClient, PutItemCommand, GetItemCommand,ScanCommand } from '@aws-sdk/client-dynamodb';
+import { DynamoDBClient, PutItemCommand, ScanCommand } from '@aws-sdk/client-dynamodb';
 import { v4 } from 'uuid';
 
 const app = express();
-const router = express.Router();p
+const router = express.Router();
 
 
 app.use(router);
