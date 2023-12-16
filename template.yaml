@@ -27,6 +27,13 @@ Resources:
   API:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
+      Policies:
+      - Version: "2012-10-17" # Policy Document
+        Statement:
+          - Effect: Allow
+            Action:
+              - dynamodb:*
+            Resource: "*"
       CodeUri: api/
       Handler: app.handler
       Runtime: nodejs18.x
