@@ -40,7 +40,7 @@ app.get(
         const client = new DynamoDBClient({ region: 'eu-west-2' });
         const command = new GetItemCommand({
             TableName: 'tasks',
-            Item: {
+            Key: {
                 taskId: {
                     S: taskId,
                 },
