@@ -15,7 +15,7 @@ app.get(
     expressAsyncHandler(async (req, res) => {
         const client = new DynamoDBClient({ region: 'eu-west-2' });
         const command = new ScanCommand({
-            TableName: 'task',
+            TableName: 'tasks',
         });
 
         try {
