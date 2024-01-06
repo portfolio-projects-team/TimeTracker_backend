@@ -115,7 +115,7 @@ app.post(
                     S: req.body.taskName,
                 },
                 startTime: {
-                    S: req.body.startTime,
+                    S: req.body.startTime || Math.floor(Date.now() / 1000).toString(),
                 },
                 userid: {
                     S: userId,
