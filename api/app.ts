@@ -1,14 +1,13 @@
 import express from 'express';
 import serverlessExpress, { getCurrentInvoke } from '@vendia/serverless-express';
 import expressAsyncHandler from 'express-async-handler';
-import { DynamoDBClient, PutItemCommand, ScanCommand , GetItemCommand} from '@aws-sdk/client-dynamodb';
+import { DynamoDBClient, PutItemCommand, ScanCommand, GetItemCommand } from '@aws-sdk/client-dynamodb';
 import { v4 } from 'uuid';
 import { request } from 'http';
 // import serverlessExpress, { getCurrentInvoke } from '@vendia/serverless-express';
 
 const app = express();
 const router = express.Router();
-
 
 app.use(router);
 
@@ -48,6 +47,7 @@ app.get(
                 },
             },
         });
+
         try {
             await client.send(command);
             res.json({ message: 'Successful' });
@@ -64,14 +64,18 @@ app.post(
         const ID = v4();
         const { event } = getCurrentInvoke();
         const userId = event['requestContext']?.authorizer?.claims['cognito:username'];
+
         const command = new PutItemCommand({
             TableName: 'tasks',
             Item: {
                 taskId: {
                     S: ID,
                 },
-                taskName:{
+                taskName: {
                     S: req.body.taskName,
+                },
+                startTime: {
+                    S: req.body.startTime,
                 },
                 userid: {
                     S: userId,
@@ -87,7 +91,5 @@ app.post(
         }
     }),
 );
-
-
 
 export const handler = serverlessExpress({ app });
