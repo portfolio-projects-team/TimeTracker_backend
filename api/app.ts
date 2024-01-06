@@ -1,7 +1,13 @@
 import express from 'express';
 import serverlessExpress, { getCurrentInvoke } from '@vendia/serverless-express';
 import expressAsyncHandler from 'express-async-handler';
-import { DynamoDBClient, PutItemCommand, ScanCommand, GetItemCommand } from '@aws-sdk/client-dynamodb';
+import {
+    DynamoDBClient,
+    PutItemCommand,
+    ScanCommand,
+    GetItemCommand,
+    UpdateItemCommand,
+} from '@aws-sdk/client-dynamodb';
 import { v4 } from 'uuid';
 import { request } from 'http';
 // import serverlessExpress, { getCurrentInvoke } from '@vendia/serverless-express';
@@ -45,6 +51,40 @@ app.get(
                 taskId: {
                     S: taskId,
                 },
+            },
+        });
+
+        try {
+            await client.send(command);
+            res.json({ message: 'Successful' });
+        } catch (e) {
+            res.json({ error: JSON.stringify(e) });
+        }
+    }),
+);
+app.post(
+    '/task/:taskId/compete',
+    expressAsyncHandler(async (req, res) => {
+        const { taskId } = req.params;
+
+        if (!taskId) {
+            res.status(400).json({ error: 'taskId is required in the request parameter' });
+            return;
+        }
+
+        const client = new DynamoDBClient({ region: 'eu-west-2' });
+        const command = new UpdateItemCommand({
+            TableName: 'tasks',
+            Key: {
+                taskId: {
+                    S: taskId,
+                },
+            },
+            UpdateExpression: 'set endTime = :endTime',
+            ExpressionAttributeValues: {
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                //@ts-ignore
+                ':endTime': Math.floor(Date.now() / 1000).toString(),
             },
         });
 
