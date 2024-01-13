@@ -8,14 +8,17 @@ import {
     GetItemCommand,
     UpdateItemCommand,
 } from '@aws-sdk/client-dynamodb';
-import { v4 } from 'uuid';
-import { request } from 'http';
-// import serverlessExpress, { getCurrentInvoke } from '@vendia/serverless-express';
+import { unmarshall } from '@aws-sdk/util-dynamodb';
 
+import { v4 } from 'uuid';
+import cors from 'cors';
 const app = express();
 const router = express.Router();
+import bodyParser from 'body-parser';
 
+app.use(cors());
 app.use(router);
+app.use(bodyParser.json());
 
 app.get(
     '/task',
@@ -27,7 +30,9 @@ app.get(
 
         try {
             const { Items } = await client.send(command);
-            res.json({ tasks: Items });
+
+            const tasks = Items?.map((item) => unmarshall(item));
+            res.json({ tasks });
         } catch (e) {
             res.status(500).json({ error: JSON.stringify(e) });
         }
@@ -127,6 +132,7 @@ app.post(
             await client.send(command);
             res.json({ message: `Task with ID ${ID} created successfully` });
         } catch (e) {
+            console.log(e);
             res.json({ error: JSON.stringify(e) });
         }
     }),
